@@ -38,7 +38,7 @@ final class MineturMunicipalityRepositoryTests: XCTestCase {
     }
 
     private func makeRepository(
-        cache: QueryCache<String, [Municipality]> = QueryCache(ttl: 3600)
+        cache: QueryCache<String, [Municipality]> = QueryCache(ttl: 300)
     ) -> MineturMunicipalityRepository {
         MineturMunicipalityRepository(
             client: MineturClient(session: session),
@@ -91,11 +91,11 @@ final class MineturMunicipalityRepositoryTests: XCTestCase {
     func test_expiredCache_refetchesMunicipalityList() async throws {
         installFixtures()
         let clock = FakeClock()
-        let repository = makeRepository(cache: QueryCache(ttl: 3600, now: clock.provider))
+        let repository = makeRepository(cache: QueryCache(ttl: 300, now: clock.provider))
 
         _ = try await repository.searchMunicipalities(query: "madrid")
         let firstCount = MockURLProtocol.requestCount
-        clock.advance(by: 3601) // TTL expired
+        clock.advance(by: 301) // TTL expired
         _ = try await repository.searchMunicipalities(query: "madrid")
 
         XCTAssertGreaterThan(MockURLProtocol.requestCount, firstCount)

@@ -15,7 +15,7 @@ final class MineturMunicipalityRepository: MunicipalityRepository {
 
     init(
         client: MineturClient = MineturClient(),
-        cache: QueryCache<String, [Municipality]> = QueryCache(ttl: 3600)
+        cache: QueryCache<String, [Municipality]> = QueryCache(ttl: 300)
     ) {
         self.client = client
         self.cache = cache
