@@ -1,0 +1,21 @@
+name: GasFinder CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show Xcode version
+        run: xcodebuild -version
+      - name: Build and test
+        run: |
+          xcodebuild test \
+            -project GasFinder/GasFinder.xcodeproj \
+            -scheme GasFinder \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -resultBundlePath TestResults.xcresult
