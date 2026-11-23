@@ -1,3 +1,10 @@
+//
+// MineturMunicipalityRepository.swift
+//  GasFinder
+//
+//  Created by pedro.candon.local on 23/11/2026.
+//
+
 import Foundation
 
 /// MINETUR implementation of `MunicipalityRepository`.
@@ -7,7 +14,6 @@ import Foundation
 /// request per province, run concurrently) and kept in an in-memory cache
 /// with a limited TTL, so repeated searches never repeat those requests.
 final class MineturMunicipalityRepository: MunicipalityRepository {
-    /// Single cache key: the list covers every province.
     private static let cacheKey = "all-municipalities"
 
     private let client: MineturClient
@@ -41,19 +47,16 @@ final class MineturMunicipalityRepository: MunicipalityRepository {
         let normalized = normalize(query)
         guard !normalized.isEmpty else { return [] }
 
-        // 1. Exact municipality name ("madrid" -> Madrid).
         let byName = municipalities.filter { normalize($0.name) == normalized }
         if !byName.isEmpty {
             return byName.sorted { $0.name < $1.name }
         }
 
-        // 2. Exact province name ("álava" -> the municipalities of Álava).
         let byProvince = municipalities.filter { normalize($0.province) == normalized }
         if !byProvince.isEmpty {
             return byProvince.sorted { $0.name < $1.name }
         }
 
-        // 3. Not found.
         return []
     }
 

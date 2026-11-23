@@ -1,3 +1,10 @@
+//
+// GasFinderApp.swift
+//  GasFinder
+//
+//  Created by pedro.candon.local on 19/11/2026.
+//
+
 import SwiftUI
 
 @main

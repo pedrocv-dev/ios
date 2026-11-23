@@ -1,3 +1,10 @@
+//
+// SearchStationsUseCase.swift
+//  GasFinder
+//
+//  Created by pedro.candon.local on 20/11/2026.
+//
+
 import Foundation
 
 /// Use case: find the cheapest stations of a municipality for a fuel type.

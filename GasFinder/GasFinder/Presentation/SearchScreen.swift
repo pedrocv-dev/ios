@@ -1,3 +1,10 @@
+//
+// SearchScreen.swift
+//  GasFinder
+//
+//  Created by pedro.candon.local on 23/11/2026.
+//
+
 import SwiftUI
 
 /// Search screen: municipality text field + fuel filter + results list,

@@ -1,15 +1,13 @@
+//
+// SearchViewModel.swift
+//  GasFinder
+//
+//  Created by pedro.candon.local on 23/11/2026.
+//
+
 import Foundation
 import Observation
 
-/// ViewModel for the gas station search screen.
-///
-/// Uses the `@Observable` macro so SwiftUI views holding it with `@State`
-/// re-render on every change.
-///
-/// The search only runs when the user presses the search button; every new
-/// search cancels the in-flight one, so only the results of the latest query
-/// are ever shown. `CancellationError` is intentionally swallowed: it means
-/// the search was superseded, not that something failed.
 @Observable
 @MainActor
 final class SearchViewModel {
@@ -50,11 +48,9 @@ final class SearchViewModel {
         searchTask = Task { [searchStations] in
             do {
                 let results = try await searchStations.execute(query: trimmed, fuel: fuel)
-                // Discard stale results from a superseded search.
                 guard !Task.isCancelled else { return }
                 state = results.isEmpty ? .empty : .results(results)
             } catch is CancellationError {
-                // The search was replaced by a newer one; nothing to show.
                 return
             } catch StationSearchError.municipalityNotFound(let name) {
                 guard !Task.isCancelled else { return }

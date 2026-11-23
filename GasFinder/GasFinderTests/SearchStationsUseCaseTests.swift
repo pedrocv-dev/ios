@@ -1,8 +1,14 @@
+//
+// SearchStationsUseCaseTests.swift
+//  GasFinder
+//
+//  Created by pedro.candon.local on 20/11/2026.
+//
+
 import XCTest
 @testable import GasFinder
 
 // MARK: - Test doubles
-
 private actor MockMunicipalityRepository: MunicipalityRepository {
     private let matches: [Municipality]
     private(set) var queries: [String] = []
@@ -36,10 +42,8 @@ private actor MockGasStationRepository: GasStationRepository {
 }
 
 // MARK: - Tests
-
 final class SearchStationsUseCaseTests: XCTestCase {
     private let madrid = Municipality(id: "4354", name: "Madrid", province: "MADRID")
-    /// National dataset: stations from Madrid and from other municipalities.
     private let stations = [
         GasStation(id: "1", brand: "CEPSA", address: "Calle A", municipalityId: "4354",
                    municipality: "Madrid", province: "MADRID", locality: nil, postalCode: nil,
@@ -69,8 +73,6 @@ final class SearchStationsUseCaseTests: XCTestCase {
 
         let results = try await useCase.execute(query: "madrid", fuel: .diesel)
 
-        // Only stations of the resolved municipality selling diesel,
-        // cheapest first; stations from other municipalities are excluded.
         XCTAssertEqual(results.map(\.id), ["2", "3", "1"])
         let queries = await municipalityRepository.queries
         XCTAssertEqual(queries, ["madrid"])

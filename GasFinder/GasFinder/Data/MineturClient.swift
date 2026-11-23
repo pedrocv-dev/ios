@@ -1,3 +1,10 @@
+//
+// MineturClient.swift
+//  GasFinder
+//
+//  Created by pedro.candon.local on 23/11/2026.
+//
+
 import Foundation
 
 enum MineturError: Error, Equatable {
@@ -81,7 +88,7 @@ struct ProvinceDTO: Decodable {
     let name: String
 
     enum CodingKeys: String, CodingKey {
-        case id = "IDPovincia" // sic: the API spells the key this way.
+        case id = "IDPovincia"
         case name = "Provincia"
     }
 }
@@ -125,8 +132,6 @@ struct MineturClient: Sendable {
 
     func allStations() async throws -> [GasStation] {
         let (data, _) = try await perform(request: URLRequest(url: baseURL))
-        // The national dataset is large (~12 MB): decode and map off the
-        // main actor so the UI never blocks.
         return try await Task.detached(priority: .userInitiated) {
             try JSONDecoder().decode(StationsResponseDTO.self, from: data)
                 .stations
@@ -169,8 +174,6 @@ struct MineturClient: Sendable {
         do {
             (data, response) = try await session.data(for: request)
         } catch let error as URLError where error.code == .cancelled {
-            // Normalize URLSession's cancellation so callers can rely on
-            // CancellationError to detect a superseded search.
             throw CancellationError()
         }
 

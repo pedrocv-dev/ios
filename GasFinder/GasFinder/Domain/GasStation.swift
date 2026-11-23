@@ -1,3 +1,10 @@
+//
+// GasStation.swift
+//  GasFinder
+//
+//  Created by pedro.candon.local on 20/11/2026.
+//
+
 import Foundation
 
 /// Domain model for a gas station, independent from any API or DTO.
@@ -5,7 +12,6 @@ struct GasStation: Identifiable, Hashable, Sendable {
     let id: String
     let brand: String
     let address: String
-    /// MINETUR municipality identifier the station belongs to.
     let municipalityId: String
     let municipality: String
     let province: String
@@ -14,7 +20,6 @@ struct GasStation: Identifiable, Hashable, Sendable {
     let schedule: String?
     let latitude: Double?
     let longitude: Double?
-    /// Price in €/L, `nil` when the station does not sell the fuel.
     let dieselPrice: Double?
     let gasoline95Price: Double?
 

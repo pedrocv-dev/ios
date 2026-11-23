@@ -1,8 +1,14 @@
+//
+// MineturGasStationRepositoryTests.swift
+//  GasFinder
+//
+//  Created by pedro.candon.local on 23/11/2026.
+//
+
 import XCTest
 @testable import GasFinder
 
 // MARK: - Test doubles
-
 /// URLProtocol that serves canned responses and counts the requests,
 /// so tests can assert whether the repository hit the network or the cache.
 final class MockURLProtocol: URLProtocol {
@@ -65,7 +71,6 @@ final class MockURLProtocol: URLProtocol {
 }
 
 // MARK: - Tests
-
 final class MineturGasStationRepositoryTests: XCTestCase {
     private var session: URLSession!
 
@@ -99,7 +104,6 @@ final class MineturGasStationRepositoryTests: XCTestCase {
     }
 
     // MARK: Mapping
-
     func test_stations_mapsResponseIntoDomainModel() async throws {
         MockURLProtocol.handler = { _ in try self.makeResponse() }
         let repository = makeRepository()
@@ -120,7 +124,6 @@ final class MineturGasStationRepositoryTests: XCTestCase {
         XCTAssertEqual(try XCTUnwrap(cepsa.dieselPrice), 1.909, accuracy: 0.000001)
         XCTAssertEqual(try XCTUnwrap(cepsa.gasoline95Price), 1.684, accuracy: 0.000001)
 
-        // Station without prices for these fuels.
         let shell = try XCTUnwrap(stations.first { $0.brand == "SHELL" })
         XCTAssertNil(shell.dieselPrice)
         XCTAssertNil(shell.gasoline95Price)
@@ -141,7 +144,6 @@ final class MineturGasStationRepositoryTests: XCTestCase {
     }
 
     // MARK: Cache behavior
-
     func test_repeatedLookup_hitsCacheWithoutSecondNetworkCall() async throws {
         MockURLProtocol.handler = { _ in try self.makeResponse() }
         let repository = makeRepository()
@@ -160,7 +162,7 @@ final class MineturGasStationRepositoryTests: XCTestCase {
         let repository = makeRepository(cache: cache)
 
         _ = try await repository.stations()
-        clock.advance(by: 121) // TTL expired
+        clock.advance(by: 121)
         _ = try await repository.stations()
 
         XCTAssertEqual(MockURLProtocol.requestCount, 2, "Expired cache must trigger a network refetch")
@@ -180,7 +182,6 @@ final class MineturGasStationRepositoryTests: XCTestCase {
     }
 
     // MARK: Cancellation
-
     func test_cancellation_propagatesFromNetworkRequest() async throws {
         MockURLProtocol.handler = { _ in try self.makeResponse(delay: 2) }
         let repository = makeRepository()
@@ -201,7 +202,6 @@ final class MineturGasStationRepositoryTests: XCTestCase {
 }
 
 // MARK: - Fixtures
-
 private extension MineturGasStationRepositoryTests {
     static let stationsJSON = """
     {

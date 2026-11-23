@@ -1,3 +1,10 @@
+//
+// MineturMunicipalityRepositoryTests.swift
+//  GasFinder
+//
+//  Created by pedro.candon.local on 23/11/2026.
+//
+
 import XCTest
 @testable import GasFinder
 
@@ -95,7 +102,7 @@ final class MineturMunicipalityRepositoryTests: XCTestCase {
 
         _ = try await repository.searchMunicipalities(query: "madrid")
         let firstCount = MockURLProtocol.requestCount
-        clock.advance(by: 301) // TTL expired
+        clock.advance(by: 301)
         _ = try await repository.searchMunicipalities(query: "madrid")
 
         XCTAssertGreaterThan(MockURLProtocol.requestCount, firstCount)
@@ -114,7 +121,6 @@ final class MineturMunicipalityRepositoryTests: XCTestCase {
 }
 
 // MARK: - Fixtures
-
 private extension MineturMunicipalityRepositoryTests {
     static let provincesJSON = """
     [

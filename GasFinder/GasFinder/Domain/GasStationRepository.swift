@@ -1,3 +1,10 @@
+//
+// GasStationRepository.swift
+//  GasFinder
+//
+//  Created by pedro.candon.local on 20/11/2026.
+//
+
 import Foundation
 
 /// Abstraction over the data source of gas station prices.

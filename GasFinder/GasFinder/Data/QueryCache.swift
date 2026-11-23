@@ -1,3 +1,10 @@
+//
+// QueryCache.swift
+//  GasFinder
+//
+//  Created by pedro.candon.local on 20/11/2026.
+//
+
 import Foundation
 
 /// In-memory cache keyed by query with a time-to-live (TTL).

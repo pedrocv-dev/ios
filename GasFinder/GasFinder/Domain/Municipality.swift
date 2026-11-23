@@ -1,8 +1,14 @@
+//
+// Municipality.swift
+//  GasFinder
+//
+//  Created by pedro.candon.local on 20/11/2026.
+//
+
 import Foundation
 
 /// Domain model for a Spanish municipality (municipio).
 struct Municipality: Identifiable, Hashable, Sendable {
-    /// MINETUR municipality identifier used by the prices API.
     let id: String
     let name: String
     let province: String

@@ -1,3 +1,10 @@
+//
+// MineturGasStationRepository.swift
+//  GasFinder
+//
+//  Created by pedro.candon.local on 23/11/2026.
+//
+
 import Foundation
 
 /// MINETUR implementation of `GasStationRepository`.
@@ -8,7 +15,6 @@ import Foundation
 /// reuse the cached dataset instead of hitting the network; once expired,
 /// the dataset is fetched again and the cache is refreshed.
 final class MineturGasStationRepository: GasStationRepository {
-    /// Single cache key: the dataset is national, not per municipality.
     private static let cacheKey = "all-stations"
 
     private let client: MineturClient

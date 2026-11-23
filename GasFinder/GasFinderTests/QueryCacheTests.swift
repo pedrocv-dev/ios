@@ -1,8 +1,14 @@
+//
+// QueryCacheTests.swift
+//  GasFinder
+//
+//  Created by pedro.candon.local on 20/11/2026.
+//
+
 import XCTest
 @testable import GasFinder
 
 // MARK: - Test doubles
-
 /// Deterministic clock so cache expiry can be tested without sleeping.
 final class FakeClock: @unchecked Sendable {
     private let lock = NSLock()
@@ -30,7 +36,6 @@ final class FakeClock: @unchecked Sendable {
 }
 
 // MARK: - Tests
-
 final class QueryCacheTests: XCTestCase {
     func test_returnsStoredValueWhileFresh() async {
         let clock = FakeClock()
@@ -48,12 +53,11 @@ final class QueryCacheTests: XCTestCase {
         let cache = QueryCache<String, Int>(ttl: 120, now: clock.provider)
 
         await cache.set(42, for: "key")
-        clock.advance(by: 120) // exactly TTL -> expired
+        clock.advance(by: 120)
 
         let value = await cache.value(for: "key")
         XCTAssertNil(value)
 
-        // The expired entry was evicted: setting again and reading works.
         await cache.set(7, for: "key")
         let refreshed = await cache.value(for: "key")
         XCTAssertEqual(refreshed, 7)
@@ -66,7 +70,7 @@ final class QueryCacheTests: XCTestCase {
         await cache.set(1, for: "key")
         clock.advance(by: 60)
         await cache.set(2, for: "key")
-        clock.advance(by: 59) // still inside the refreshed TTL
+        clock.advance(by: 59)
 
         let value = await cache.value(for: "key")
         XCTAssertEqual(value, 2)

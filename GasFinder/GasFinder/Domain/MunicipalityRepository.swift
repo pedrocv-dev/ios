@@ -1,3 +1,10 @@
+//
+// MunicipalityRepository.swift
+//  GasFinder
+//
+//  Created by pedro.candon.local on 20/11/2026.
+//
+
 import Foundation
 
 /// Abstraction over the municipality data source (name → municipality).

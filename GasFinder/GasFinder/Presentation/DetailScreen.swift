@@ -1,3 +1,10 @@
+//
+// DetailScreen.swift
+//  GasFinder
+//
+//  Created by pedro.candon.local on 23/11/2026.
+//
+
 import SwiftUI
 
 /// Detail screen: shows the relevant information of the selected station.

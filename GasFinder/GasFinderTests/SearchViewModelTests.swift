@@ -1,8 +1,14 @@
+//
+// SearchViewModelTests.swift
+//  GasFinder
+//
+//  Created by pedro.candon.local on 23/11/2026.
+//
+
 import XCTest
 @testable import GasFinder
 
 // MARK: - Test doubles
-
 private actor MockMunicipalityRepository: MunicipalityRepository {
     private let matches: [Municipality]
     private(set) var queries: [String] = []
@@ -66,8 +72,6 @@ private actor FailingGasStationRepository: GasStationRepository {
         throw error
     }
 }
-
-// MARK: - Tests
 
 @MainActor
 final class SearchViewModelTests: XCTestCase {
@@ -162,24 +166,20 @@ final class SearchViewModelTests: XCTestCase {
             stationRepository: stationRepository
         )
 
-        // 1. Start a slow search.
         viewModel.municipalityQuery = "Slowtown"
         viewModel.submitSearch()
         await Task.yield()
         XCTAssertEqual(viewModel.state, .loading)
 
-        // 2. Start a second search before the first one finishes.
         viewModel.municipalityQuery = "madrid"
         viewModel.submitSearch()
         await waitForIdle(viewModel)
 
-        // 3. Only the latest results are shown.
         guard case .results(let stations) = viewModel.state else {
             return XCTFail("Expected results, got \(String(describing: viewModel.state))")
         }
         XCTAssertEqual(stations.map(\.id), ["1"], "Results of a superseded search must never be shown")
 
-        // 4. The first request was actually cancelled.
         var cancelled = await stationRepository.hasObservedCancellation()
         let deadline = Date().addingTimeInterval(2)
         while !cancelled && Date() < deadline {
@@ -190,8 +190,6 @@ final class SearchViewModelTests: XCTestCase {
     }
 
     func test_fuelChange_refiltersWithoutSecondNetworkFetch() async throws {
-        // Real caching repository over a mocked URL protocol, so the request
-        // count proves the fuel change reuses the cached stations.
         MockURLProtocol.reset()
         let configuration = URLSessionConfiguration.ephemeral
         configuration.protocolClasses = [MockURLProtocol.self]
@@ -214,8 +212,6 @@ final class SearchViewModelTests: XCTestCase {
         viewModel.submitSearch()
         await waitForIdle(viewModel)
 
-        // Switching fuel re-runs the search; the repository cache must
-        // avoid a second network fetch.
         viewModel.fuel = .gasoline
         await waitForIdle(viewModel)
 
@@ -228,7 +224,6 @@ final class SearchViewModelTests: XCTestCase {
     }
 
     // MARK: Helpers
-
     private func waitForIdle(_ viewModel: SearchViewModel, timeout: TimeInterval = 2) async {
         let deadline = Date().addingTimeInterval(timeout)
         while viewModel.state == .loading && Date() < deadline {
@@ -239,7 +234,6 @@ final class SearchViewModelTests: XCTestCase {
 }
 
 // MARK: - Fixtures
-
 private extension SearchViewModelTests {
     static let stationsFixture = """
     {
